@@ -18,6 +18,7 @@
         android:id="@+id/get_apk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:text="下载"
         />
 

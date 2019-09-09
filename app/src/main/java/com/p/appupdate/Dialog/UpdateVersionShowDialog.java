@@ -1,5 +1,6 @@
 package com.p.appupdate.Dialog;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TextView;
 
+import com.p.appupdate.MainActivity;
 import com.p.appupdate.R;
 import com.p.appupdate.bean.DownloadBean;
 import com.p.appupdate.net.INetDownloadCallBack;
@@ -62,6 +64,7 @@ public class UpdateVersionShowDialog extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        //setCancelable(false);
         initEvent();
     }
 
@@ -70,6 +73,9 @@ public class UpdateVersionShowDialog extends DialogFragment {
         title = view.findViewById(R.id.title);
         content = view.findViewById(R.id.content);
         update = view.findViewById(R.id.update);
+        title.setText(downloadBean.title);
+        content.setText(downloadBean.content);
+
     }
     private void initEvent()
     {
@@ -101,9 +107,15 @@ public class UpdateVersionShowDialog extends DialogFragment {
                         });
 
                     }
-                });
+                },UpdateVersionShowDialog.this);
             }
         });
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        AppUpdater.getInstance().getNetManager().cancel(UpdateVersionShowDialog.this);
     }
 }
 

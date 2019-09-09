@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.FileProvider;
+import android.util.Log;
 
 import java.io.File;
 
@@ -16,6 +17,7 @@ import java.io.File;
  */
 public class AppUtils {
 
+    private static final String TAG = "AppUtils";
 
     public static long getVersionCode(Context context)
     {
@@ -53,11 +55,13 @@ public class AppUtils {
 
     public static void installApk(Context context ,String downloadApk)
     {
+
         Intent intent = new Intent(Intent.ACTION_VIEW);
         File file = new File(downloadApk);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             Uri apkUri = FileProvider.getUriForFile(context, context.getPackageName()+".fileprovider", file);
+            Log.e(TAG,"apkUri::"+apkUri.toString());
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
