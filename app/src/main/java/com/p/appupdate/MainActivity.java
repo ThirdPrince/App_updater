@@ -1,23 +1,18 @@
 package com.p.appupdate;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.p.appupdate.Dialog.UpdateVersionShowDialog;
 import com.p.appupdate.bean.DownloadBean;
-import com.p.appupdate.net.INetDownloadCallBack;
 import com.p.appupdate.updater.AppUpdater;
 import com.p.appupdate.utils.AppUtils;
 
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.File;
 
 /**
  * 应用内升级APP
