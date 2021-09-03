@@ -1,6 +1,10 @@
 package com.p.appupdate;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,6 +15,7 @@ import com.p.appupdate.Dialog.UpdateVersionShowDialog;
 import com.p.appupdate.bean.DownloadBean;
 import com.p.appupdate.updater.AppUpdater;
 import com.p.appupdate.utils.AppUtils;
+import com.p.appupdate.viewmodel.AppUpdaterViewModel;
 
 import org.json.JSONObject;
 
@@ -22,49 +27,33 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     private Button getAppUpdate ,getApk ;
+
+    private AppUpdaterViewModel appUpdaterViewModel ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        appUpdaterViewModel = new ViewModelProvider(this, new ViewModelProvider.NewInstanceFactory()).get(AppUpdaterViewModel.class);
         getAppUpdate = findViewById(R.id.get_update);
         getApk = findViewById(R.id.get_apk);
+
         getAppUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                AppUpdater.getInstance().getNetManager().get(Constants.APP_UPDATE_URL, new NetCallBack() {
+                appUpdaterViewModel.getIsUpdater().observe(MainActivity.this, new Observer<DownloadBean>() {
                     @Override
-                    public void success(String response) {
-                        Log.e(TAG, "rsp==" + response);
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            DownloadBean downLoadBean = DownloadBean.parse(jsonObject);
-
-                            if (downLoadBean == null) {
-                                Toast.makeText(MainActivity.this, "接口返回数据异常", Toast.LENGTH_LONG).show();
-                                return;
-                            }
-
-                            // 检测是否需要弹窗
-
-                            long versionCode = Long.parseLong(downLoadBean.versionCode);
-                            if (versionCode > AppUtils.getVersionCode(MainActivity.this)) {
-                                UpdateVersionShowDialog.show(MainActivity.this, downLoadBean);
-                                return;
-                            }
-                        }catch (Exception e)
-                        {
-                            e.printStackTrace();
+                    public void onChanged(DownloadBean bean) {
+                        if (bean == null) {
+                            Toast.makeText(MainActivity.this, "接口返回数据异常", Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                        long versionCode = Long.parseLong(bean.versionCode);
+                        if (versionCode > AppUtils.getVersionCode(MainActivity.this)) {
+                            UpdateVersionShowDialog.show(MainActivity.this, bean);
                         }
                     }
-
-
-
-                    @Override
-                    public void failed(Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
                 });
+
             }
         });
 
