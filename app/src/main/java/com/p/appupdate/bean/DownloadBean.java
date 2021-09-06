@@ -10,33 +10,32 @@ import java.io.Serializable;
  */
 public class DownloadBean implements Serializable {
 
-    public String title ;
-    public String content ;
-    public String url  ;
-    public  String md5 ;
-    public  String versionCode ;
+    public String title;
+    public String content;
+    public String url;
+    public String md5;
+    public String versionCode;
 
-    public  static DownloadBean  parse(JSONObject jsonObject)
-    {
+    public static DownloadBean parse(JSONObject jsonObject) {
         DownloadBean downloadBean = null;
         try {
             String title = jsonObject.getString("title");
             String content = jsonObject.getString("content");
             String url = jsonObject.getString("url");
-            String  md5 = jsonObject.getString("md5");
-            String  versionCode = jsonObject.getString("versionCode");
+            String md5 = jsonObject.getString("md5");
+            String versionCode = jsonObject.getString("versionCode");
             downloadBean = new DownloadBean();
-            downloadBean.url = url ;
+            downloadBean.url = url;
             downloadBean.title = title;
-            downloadBean.md5 = md5 ;
-            downloadBean.content = content ;
-            downloadBean.versionCode = versionCode ;
+            downloadBean.md5 = md5;
+            downloadBean.content = content;
+            downloadBean.versionCode = versionCode;
 
-            return downloadBean ;
+            return downloadBean;
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        return null ;
+        return null;
     }
 }
